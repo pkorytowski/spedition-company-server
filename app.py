@@ -62,10 +62,11 @@ def get_paths():
 
     case = get_best_case(list_of_cases)
     if case is not None:
-        case.print_best_path()
-    response = Response(json.dumps(ReturnCase(case), default=dumper))
-    response.headers['Content-Type'] = 'application/json'
-    return response
+        response = Response(json.dumps(ReturnCase(case), default=dumper))
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+    return jsonify("Empty")
 
 
 if __name__ == '__main__':
