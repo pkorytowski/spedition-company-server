@@ -60,6 +60,29 @@ class City:
         self.name = node._properties["name"]
 
 
+class CityWithRelationship:
+    def __init__(self, city):
+        self.city = city
+        self.relationships = []
+
+    def get_relationships_names(self):
+        return [rel.city.name for rel in self.relationships]
+
+
+class Relationship:
+    def __init__(self, relationship, city):
+        self.distance = relationship._properties["wt"]
+        self.city = city
+
+
+class FreightForGetAll:
+    def __init__(self, freight, start, end):
+        self.name = freight.get_name()
+        self.value = freight.get_value()
+        self.start = start
+        self.end = end
+
+
 class Freight:
     def __init__(self, freight, begin, end):
         self.freight = freight
@@ -73,7 +96,7 @@ class Freight:
         return self.end.end_node._id
 
     def get_value(self):
-        return self.freight._properties['value']
+        return float(self.freight._properties['value'])
 
     def get_name(self):
         return self.freight._properties['name']
@@ -143,5 +166,16 @@ class Case:
             print("Total value: ", self.get_best_path_value())
 
 
+class ReturnCase:
+    def __init__(self, case):
+        self.nodes = [city.name for city in case.cities]
+        self.freights = [FreightForGetAll(item, case.cities[case.nodes_map[item.get_from_id()]].name, case.cities[case.nodes_map[item.get_to_id()]].name) for item in case.best_path]
+        self.value = case.get_best_path_value()
 
+
+def dumper(obj):
+    try:
+        return obj.toJSON()
+    except:
+        return obj.__dict__
 
